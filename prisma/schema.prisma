@@ -1,0 +1,308 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model FGSQ {
+  scenario_id      Int
+  fg_warehouse     String?
+  sku              String?
+  cases            Float?
+  var_cost         Float?
+  var_period_cost  Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  period           String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model FG_Cm {
+  scenario_id      Int
+  fg_warehouse     String?
+  distributor      String?
+  sku              String?
+  cases            Float?
+  dist_cost        Float?
+  route_miles      Float?
+  truck_loads      Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  period           String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model PdS_Pd {
+  scenario_id   Int
+  prod_supplier String?
+  prod_site     String?
+  raw_material  String?
+  period        String?
+  quantity      Float?
+  id            BigInt    @id @default(autoincrement())
+  Scenarios     Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model PdStQ {
+  scenario_id      Int
+  prod_site        String?
+  stream           String?
+  sku              String?
+  litres           Float?
+  var_cost         Float?
+  eff_capacity     Float?
+  rqd_stream_hours Float?
+  site_group       String?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  period           String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model Pd_Pk {
+  scenario_id      Int
+  prod_site        String?
+  pack_site        String?
+  sku              String?
+  period           String?
+  litres           Float?
+  dist_cost        Float?
+  route_miles      Float?
+  truck_loads      Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model PkLnQ {
+  scenario_id      Int
+  pack_site        String?
+  line             String?
+  sku              String?
+  cases            Float?
+  var_cost         Float?
+  eff_capacity     Float?
+  rqd_lines_hours  Float?
+  site_group       String?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  period           String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model PkS_Pk {
+  scenario_id        Int
+  packaging_supplier String?
+  pack_site          String?
+  raw_material       String?
+  period             String?
+  quantity           Float?
+  id                 BigInt    @id @default(autoincrement())
+  Scenarios          Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model Pk_FG {
+  scenario_id      Int
+  pack_site        String?
+  fg_warehouse     String?
+  sku              String?
+  period           String?
+  cases            Float?
+  dist_cost        Float?
+  wh_handling      Float?
+  route_miles      Float?
+  truck_loads      Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model Pk_WIP {
+  scenario_id      Int
+  pack_site        String?
+  wip_warehouse    String?
+  sku              String?
+  period           String?
+  dist_cost        Float?
+  wh_handling      Float?
+  route_miles      Float?
+  truck_loads      Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  cases            Float?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model Python_Files {
+  id            Int       @id(map: "python_file_pkey") @default(autoincrement())
+  file_name     String?
+  upload_date   DateTime? @default(now()) @db.Timestamp(6)
+  status        Int?      @db.SmallInt
+  solved_date   DateTime? @db.Timestamp(6)
+  error_message String?
+}
+
+model Scenario_status {
+  status_id Int         @id(map: "scenario_status_pkey") @default(autoincrement()) @db.SmallInt
+  status    String
+  Scenarios Scenarios[]
+}
+
+model Scenarios {
+  id              Int              @id @default(autoincrement())
+  scenario_code   String?
+  scenario_status Int?             @db.SmallInt
+  user_id         Int?
+  upload_date     DateTime         @default(now()) @db.Timestamptz(6)
+  solved_date     DateTime?        @db.Timestamptz(6)
+  input_filename  String?
+  output_filename String?
+  error_message   String?
+  sku_type        String?
+  demand          String?
+  FGSQ            FGSQ[]
+  FG_Cm           FG_Cm[]
+  PdS_Pd          PdS_Pd[]
+  PdStQ           PdStQ[]
+  Pd_Pk           Pd_Pk[]
+  PkLnQ           PkLnQ[]
+  PkS_Pk          PkS_Pk[]
+  Pk_FG           Pk_FG[]
+  Pk_WIP          Pk_WIP[]
+  Scenario_status Scenario_status? @relation(fields: [scenario_status], references: [status_id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_status (FK)")
+  Users           Users?           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id (FK)")
+  WIPSQ           WIPSQ[]
+  WIP_rPK         WIP_rPK[]
+  rPkLnQ          rPkLnQ[]
+  rPkS_rPk        rPkS_rPk[]
+  rPk_FG          rPk_FG[]
+}
+
+model Solver_Busy {
+  is_busy Boolean
+  id      Int     @id @db.SmallInt
+}
+
+model TemplateFileInfo {
+  id          BigInt    @id @default(autoincrement())
+  file_name   String?
+  upload_date DateTime? @default(now()) @db.Date
+}
+
+model UserRoles {
+  id    Int     @id @db.SmallInt
+  role  String
+  Users Users[]
+}
+
+model Users {
+  id        Int         @id @default(autoincrement())
+  name      String
+  role_id   Int
+  password  String
+  email     String
+  Scenarios Scenarios[]
+  UserRoles UserRoles   @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "roleId (FK)")
+}
+
+model WIPSQ {
+  scenario_id      Int
+  sku              String?
+  cases            Float?
+  var_cost         Float?
+  var_period_cost  Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  period           String?
+  wip_warehouse    String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model WIP_rPK {
+  scenario_id      Int
+  wip_warehouse    String?
+  repack_site      String?
+  sku              String?
+  period           String?
+  cases            Float?
+  dist_cost        Float?
+  wh_handling      Float?
+  route_miles      Float?
+  truck_loads      Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model rPkLnQ {
+  scenario_id      Int
+  repack_site      String?
+  line             String?
+  sku              String?
+  cases            Float?
+  var_cost         Float?
+  eff_capacity     Float?
+  rqd_line_hours   Float?
+  site_group       String?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  period           String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model rPkS_rPk {
+  scenario_id     Int
+  repack_supplier String?
+  raw_material    String?
+  period          String?
+  quantity        Float?
+  repack_site     String?
+  id              BigInt    @id @default(autoincrement())
+  Scenarios       Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model rPk_FG {
+  scenario_id      Int
+  repack_site      String?
+  fg_warehouse     String?
+  sku              String?
+  cases            Float?
+  dist_cost        Float?
+  wh_handling      Float?
+  route_miles      Float?
+  truck_loads      Float?
+  sku_group        String?
+  parent_sku_group String?
+  child_sku_group  String?
+  period           String?
+  id               BigInt    @id @default(autoincrement())
+  Scenarios        Scenarios @relation(fields: [scenario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "scenario_id (FK)")
+}
+
+model Python_Status {
+  id     Int     @id @db.SmallInt
+  status String?
+}
