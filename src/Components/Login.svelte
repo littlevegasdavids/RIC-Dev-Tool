@@ -32,10 +32,10 @@
 </script>
 <div class="grid grid-cols-1 justify-items-center gap-2">
     <p>Enter Password</p>
-    <input type="password" class="input input-bordered input-secondary" bind:value={passwordField} />
+    <input type="password" class="input input-bordered text-black" bind:value={passwordField} />
     {#if showError}
         <p class="text-center font-bold text-red-500">Incorrect password</p>
     {/if}
-    <button class="btn btn-primary" on:click={login}>Test</button>
+    <button class="btn btn-primary" on:click={login}>Login</button>
     
 </div>
