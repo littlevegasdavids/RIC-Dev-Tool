@@ -36,6 +36,6 @@
     {#if showError}
         <p class="text-center font-bold text-red-500">Incorrect password</p>
     {/if}
-    <button class="btn btn-primary" on:click={login}>Login</button>
+    <button class="btn btn-primary" on:click={login}>Test</button>
     
 </div>
