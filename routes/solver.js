@@ -2,6 +2,7 @@ const {Router} = require('express')
 const router = new Router()
 const prisma = require('../prisma/client')
 module.exports = router
+const path = require("path");
 
 const logger = require('../helpers/logger')
 
