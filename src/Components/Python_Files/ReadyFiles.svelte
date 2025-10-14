@@ -29,7 +29,7 @@
             colour = "bg-base-300"
         }
         else{
-            colour = "bg-base-100"
+            colour = "bg-base-300"
         }
         cardColourCheck = !cardColourCheck
         return colour
