@@ -64,7 +64,9 @@ async function solvePythonFile(file_id, callback){
 
         let writeStream = filesystem.createWriteStream(`files/${file_id}/output.txt`)
 
-        py = pySpawn('python3', ["-u", `files/${file_id}/input.py`, `${file_id}`])
+        const pythonExecutable = path.join(__dirname, "../venv/bin/python");
+        py = pySpawn(pythonExecutable, ["-u", `files/${file_id}/input.py`, `${file_id}`]);
+
         logger.info(`Solver API -- Solver start run on file id: ${file_id}`)
 
         py.stdout.on('data', (data)=>{
