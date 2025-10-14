@@ -9,7 +9,7 @@
     import SolvedFiles from "./Components/Python_Files/SolvedFiles.svelte";
 </script>
 <Router>
-	<div class="bg-neutral-content min-h-screen text-white">
+	<div class="bg-neutral-content min-h-screen text-black">
 		<div class="bg-base-300 min-h-screen max-w-7xl mx-auto p-5">
 			<NavBar />
 			<Route path= "/">
